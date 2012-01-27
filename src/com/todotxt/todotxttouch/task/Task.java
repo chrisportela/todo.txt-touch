@@ -46,6 +46,7 @@ public class Task implements Serializable {
 	private String text;
 	private String completionDate;
 	private String prependedDate;
+	private String dueDate;
 	private String relativeAge = "";
 	private List<String> contexts;
 	private List<String> projects;
