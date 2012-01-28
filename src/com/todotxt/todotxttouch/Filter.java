@@ -186,12 +186,5 @@ public class Filter extends TabActivity {
 		return arr;
 	}
 
-	private static void setSelected(ListView lv, ArrayList<String> selected) {
-		int count = lv.getCount();
-		for (int i = 0; i < count; i++) {
-			String str = (String) lv.getItemAtPosition(i);
-			lv.setItemChecked(i, selected != null && selected.contains(str));
-		}
-	}
 
 }
