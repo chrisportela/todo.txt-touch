@@ -36,7 +36,7 @@ class TextSplitter {
 			.compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
 	
 	private final static Pattern DUE_DATE_PATTERN = Pattern
-			.compile("(.*) (due:|DUE:)(\\d{4}-\\d{2}-\\d{2}) (.*)");
+			.compile("(.*) (due:)(\\d{4}-\\d{1,2}-\\d{1,2}) (.*)");
 
 	private final static TextSplitter INSTANCE = new TextSplitter();
 

@@ -32,9 +32,8 @@ import com.todotxt.todotxttouch.util.Strings;
  * @author Tim Barlotta
  */
 public class FilterFactory {
-
 	public static Filter<Task> generateAndFilter(List<Priority> priorities,
-			List<String> contexts, List<String> projects, String text,
+			List<String> contexts, List<String> projects, String dueDate, String text,
 			boolean caseSensitive) {
 		AndFilter filter = new AndFilter();
 
@@ -49,7 +48,11 @@ public class FilterFactory {
 		if (projects.size() > 0) {
 			filter.addFilter(new ByProjectFilter(projects));
 		}
-
+		
+		if (!Strings.isEmptyOrNull(dueDate)) {
+			filter.addFilter(new ByDueFilter(dueDate));
+		}
+		
 		if (!Strings.isEmptyOrNull(text)) {
 			filter.addFilter(new ByTextFilter(text, caseSensitive));
 		}

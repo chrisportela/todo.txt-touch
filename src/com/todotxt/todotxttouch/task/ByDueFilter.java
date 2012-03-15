@@ -37,10 +37,9 @@ class ByDueFilter implements Filter<Task> {
 	@Override
 	public boolean apply(Task input) {
 		// If it has the date then it's due that day
-		if (input.toString().contains(dueDate)) {
+		if (input.toString().contains("due:" + dueDate)) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 }
