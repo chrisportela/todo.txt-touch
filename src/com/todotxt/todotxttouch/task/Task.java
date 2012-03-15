@@ -47,6 +47,7 @@ public class Task implements Serializable {
 	private String text;
 	private String completionDate;
 	private String prependedDate;
+	private String dueDate;
 	private String relativeAge = "";
 	private List<String> contexts;
 	private List<String> projects;
@@ -77,7 +78,7 @@ public class Task implements Serializable {
 		this.prependedDate = splitResult.prependedDate;
 		this.completed = splitResult.completed;
 		this.completionDate = splitResult.completedDate;
-
+		this.dueDate = splitResult.dueDate;
 		this.contexts = ContextParser.getInstance().parse(text);
 		this.projects = ProjectParser.getInstance().parse(text);
 		this.mailAddresses = MailAddressParser.getInstance().parse(text);
@@ -295,6 +296,8 @@ public class Task implements Serializable {
 		result = prime * result + (completed ? 1231 : 1237);
 		result = prime * result
 				+ ((completionDate == null) ? 0 : completionDate.hashCode());
+		result = prime * result
+				+ ((dueDate == null) ? 0 : dueDate.hashCode());
 		result = prime * result
 				+ ((contexts == null) ? 0 : contexts.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);

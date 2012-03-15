@@ -22,41 +22,24 @@
  */
 package com.todotxt.todotxttouch.task;
 
-import java.util.List;
-
-import com.todotxt.todotxttouch.util.Strings;
-
 /**
- * Creates a filter based on passed in variables
+ * A filter that matches Tasks containing the specified contexts
  * 
  * @author Tim Barlotta
  */
-public class FilterFactory {
-	public static Filter<Task> generateAndFilter(List<Priority> priorities,
-			List<String> contexts, List<String> projects, String dueDate, String text,
-			boolean caseSensitive) {
-		AndFilter filter = new AndFilter();
+class ByDueFilter implements Filter<Task> {
+	private String dueDate = new String();
 
-		if (priorities.size() > 0) {
-			filter.addFilter(new ByPriorityFilter(priorities));
-		}
-
-		if (contexts.size() > 0) {
-			filter.addFilter(new ByContextFilter(contexts));
-		}
-
-		if (projects.size() > 0) {
-			filter.addFilter(new ByProjectFilter(projects));
-		}
-		
-		if (!Strings.isEmptyOrNull(dueDate)) {
-			filter.addFilter(new ByDueFilter(dueDate));
-		}
-		
-		if (!Strings.isEmptyOrNull(text)) {
-			filter.addFilter(new ByTextFilter(text, caseSensitive));
-		}
-		return filter;
+	public ByDueFilter(String dueDate) {
+		this.dueDate = dueDate;
 	}
 
+	@Override
+	public boolean apply(Task input) {
+		// If it has the date then it's due that day
+		if (input.toString().contains("due:" + dueDate)) {
+			return true;
+		}
+		return false;
+	}
 }

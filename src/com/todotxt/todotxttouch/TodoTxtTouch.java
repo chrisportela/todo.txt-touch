@@ -100,6 +100,7 @@ public class TodoTxtTouch extends ListActivity implements
 	private ArrayList<Priority> m_prios = new ArrayList<Priority>();
 	private ArrayList<String> m_contexts = new ArrayList<String>();
 	private ArrayList<String> m_projects = new ArrayList<String>();
+	private String m_dueDate;
 	private String m_search;
 
 	private int m_pos = Constants.INVALID_POSITION;
@@ -222,6 +223,7 @@ public class TodoTxtTouch extends ListActivity implements
 		outState.putStringArrayList("m_contexts", m_contexts);
 		outState.putStringArrayList("m_projects", m_projects);
 		outState.putStringArrayList("m_filters", m_filters);
+		outState.putString("m_dueDate", m_dueDate);
 		outState.putString("m_search", m_search);
 
 		dismissProgressDialog(false);
@@ -242,6 +244,7 @@ public class TodoTxtTouch extends ListActivity implements
 		m_contexts = state.getStringArrayList("m_contexts");
 		m_projects = state.getStringArrayList("m_projects");
 		m_filters = state.getStringArrayList("m_filters");
+		m_dueDate = state.getString("m_dueDate");
 		m_search = state.getString("m_search");
 		setFilteredTasks(false);
 	}
@@ -676,6 +679,7 @@ public class TodoTxtTouch extends ListActivity implements
 						.getStringArrayListExtra(Constants.EXTRA_PROJECTS);
 				m_contexts = data
 						.getStringArrayListExtra(Constants.EXTRA_CONTEXTS);
+				m_dueDate = data.getStringExtra(Constants.EXTRA_DUEDATE);
 				m_search = data.getStringExtra(Constants.EXTRA_SEARCH);
 				m_filters = data
 						.getStringArrayListExtra(Constants.EXTRA_APPLIED_FILTERS);
@@ -817,6 +821,7 @@ public class TodoTxtTouch extends ListActivity implements
 		m_contexts = new ArrayList<String>(); // Collections.emptyList();
 		m_projects = new ArrayList<String>(); // Collections.emptyList();
 		m_filters = new ArrayList<String>();
+		m_dueDate = "";
 		m_search = "";
 	}
 
@@ -836,8 +841,8 @@ public class TodoTxtTouch extends ListActivity implements
 
 		m_adapter.clear();
 		for (Task task : taskBag.getTasks(FilterFactory.generateAndFilter(
-				m_prios, m_contexts, m_projects, m_search, false), sort
-				.getComparator())) {
+				m_prios, m_contexts, m_projects, m_dueDate, m_search, false),
+				sort.getComparator())) {
 			m_adapter.add(task);
 		}
 
@@ -870,6 +875,16 @@ public class TodoTxtTouch extends ListActivity implements
 							.setImageResource(R.drawable.ic_actionbar_search);
 					filterText.setText(getString(R.string.title_search_results)
 							+ " " + m_search);
+
+					actionbar.setVisibility(View.VISIBLE);
+				}
+			} else if (!Strings.isEmptyOrNull(m_dueDate)) {
+				if (filterText != null) {
+
+					actionbar_icon
+							.setImageResource(R.drawable.ic_actionbar_search);
+					filterText.setText("Tasks due on"
+							+ " " + m_dueDate);
 
 					actionbar.setVisibility(View.VISIBLE);
 				}
@@ -1053,6 +1068,7 @@ public class TodoTxtTouch extends ListActivity implements
 				Priority.inCode(m_prios));
 		i.putStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED, m_projects);
 		i.putStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED, m_contexts);
+		i.putExtra(Constants.EXTRA_DUEDATE, m_dueDate);
 		i.putExtra(Constants.EXTRA_SEARCH, m_search);
 
 		startActivityIfNeeded(i, REQUEST_FILTER);

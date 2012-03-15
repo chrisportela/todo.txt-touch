@@ -22,59 +22,42 @@
  */
 package com.todotxt.todotxttouch;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.EmptyStackException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class Filter extends TabActivity {
+public class Filter extends Activity {
 
 	private final static String TAG = Filter.class.getSimpleName();
 	private static ArrayList<String> appliedFilters = new ArrayList<String>();
-	private TabHost mTabHost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mTabHost = getTabHost();
-
-		Drawable actionBarBg = getResources().getDrawable(
-				R.drawable.title_background);
-		mTabHost.getTabWidget().setBackgroundDrawable(actionBarBg);
-
-		LayoutInflater.from(this).inflate(R.layout.filter,
-				mTabHost.getTabContentView(), true);
-
-		mTabHost.addTab(mTabHost
-				.newTabSpec(getString(R.string.filter_tab_priorities))
-				// .setIndicator(getString(R.string.filter_tab_priorities))
-				.setIndicator(buildIndicator(R.string.filter_tab_priorities))
-				.setContent(R.id.priorities));
-		mTabHost.addTab(mTabHost
-				.newTabSpec(getString(R.string.filter_tab_projects))
-				.setIndicator(buildIndicator(R.string.filter_tab_projects))
-				.setContent(R.id.projects));
-		mTabHost.addTab(mTabHost
-				.newTabSpec(getString(R.string.filter_tab_contexts))
-				.setIndicator(buildIndicator(R.string.filter_tab_contexts))
-				.setContent(R.id.contexts));
-		mTabHost.addTab(mTabHost
-				.newTabSpec(getString(R.string.filter_tab_search))
-				.setIndicator(buildIndicator(R.string.filter_tab_search))
-				.setContent(R.id.search));
+		setContentView(R.layout.filter);
 
 		Intent data = getIntent();
 		ArrayList<String> priosArr = data
@@ -90,29 +73,172 @@ public class Filter extends TabActivity {
 				.getStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED);
 		ArrayList<String> contextsArrSelected = data
 				.getStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED);
-
+		String dueDate = data.getStringExtra(Constants.EXTRA_DUEDATE);
 		String searchTerm = data.getStringExtra(Constants.EXTRA_SEARCH);
 
-		final ListView priorities = (ListView) findViewById(R.id.prioritieslv);
-		priorities.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		priorities.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.simple_list_item_multiple_choice, priosArr));
-		setSelected(priorities, priosArrSelected);
+		// Vars of data for alert boxes
+		final CharSequence[] priorityCharArr = priosArr.toArray(new CharSequence[priosArr
+				.size()]);
+		final CharSequence[] projextCharArr = projectsArr.toArray(new CharSequence[projectsArr
+		                                            				.size()]);
+		final CharSequence[] contextCharArr = contextsArr.toArray(new CharSequence[contextsArr
+		                                            				.size()]);
 
-		final ListView projects = (ListView) findViewById(R.id.projectslv);
-		projects.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		projects.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.simple_list_item_multiple_choice, projectsArr));
-		setSelected(projects, projectsArrSelected);
+		Button priority = (Button) findViewById(R.id.addPriorityBtn);
+		priority.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.e(TAG, "Clicked Priority button");
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						Filter.this);
+				boolean dialogCanceled = false;
+				builder.setTitle("Add Priorities")
+						.setCancelable(false)
+						.setSingleChoiceItems(priorityCharArr, -1,
+								new DialogInterface.OnClickListener() {
 
-		final ListView contexts = (ListView) findViewById(R.id.contextslv);
-		contexts.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		contexts.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.simple_list_item_multiple_choice, contextsArr));
-		setSelected(contexts, contextsArrSelected);
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										Log.e(TAG, "Added Priority");
 
-		final EditText search = (EditText) findViewById(R.id.searchet);
-		search.setText(searchTerm);
+									}
+								})
+						.setPositiveButton("Add",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.dismiss();
+									}
+								})
+						.setNegativeButton("Cancel",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.cancel();
+
+									}
+								});
+
+				AlertDialog alert = builder.create();
+				alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						Log.e(TAG, "Saved Project data(Fake)");
+					}
+				});
+				alert.show();
+
+			}
+		});
+		Button project = (Button) findViewById(R.id.addProjectBtn);
+		project.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Log.e(TAG, "Clicked Project button");
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						Filter.this);
+				boolean dialogCanceled = false;
+				builder.setTitle("Add Projects")
+						.setCancelable(false)
+						.setSingleChoiceItems(projextCharArr, -1,
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										Log.e(TAG, "Added Project");
+
+									}
+								})
+						.setPositiveButton("Add",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.dismiss();
+									}
+								})
+						.setNegativeButton("Cancel",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.cancel();
+
+									}
+								});
+
+				AlertDialog alert = builder.create();
+				alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						Log.e(TAG, "Saved Project data(Fake)");
+					}
+				});
+				alert.show();
+
+			}
+		});
+		Button context = (Button) findViewById(R.id.addContextBtn);
+		context.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Log.e(TAG, "Clicked Context button");
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						Filter.this);
+				boolean dialogCanceled = false;
+				builder.setTitle("Add Context")
+						.setCancelable(false)
+						.setSingleChoiceItems(contextCharArr, -1,
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										Log.e(TAG, "Added Context");
+
+									}
+								})
+						.setPositiveButton("Add",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.dismiss();
+									}
+								})
+						.setNegativeButton("Cancel",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.cancel();
+
+									}
+								});
+
+				AlertDialog alert = builder.create();
+				alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						Log.e(TAG, "Saved Context data(Fake)");
+					}
+				});
+				alert.show();
+
+			}
+		});
 
 		Button ok = (Button) findViewById(R.id.ok);
 		ok.setOnClickListener(new OnClickListener() {
@@ -122,17 +248,6 @@ public class Filter extends TabActivity {
 				Intent data = new Intent();
 				Log.v(TAG, "Clearing all filter types.");
 				appliedFilters = new ArrayList<String>();
-				data.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
-						getItems(priorities, getString(R.string.filter_tab_priorities)));
-				data.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
-						getItems(projects, getString(R.string.filter_tab_projects)));
-				data.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
-						getItems(contexts, getString(R.string.filter_tab_contexts)));
-				data.putExtra(Constants.EXTRA_SEARCH, search.getText()
-						.toString());
-				data.putStringArrayListExtra(Constants.EXTRA_APPLIED_FILTERS,
-						appliedFilters);
-				setResult(Activity.RESULT_OK, data);
 				finish();
 			}
 		});
@@ -153,45 +268,121 @@ public class Filter extends TabActivity {
 			public void onClick(View v) {
 				Log.v(TAG, "onClick Clear");
 				appliedFilters = new ArrayList<String>();
-				setSelected(priorities, null);
-				setSelected(projects, null);
-				setSelected(contexts, null);
-				search.setText("");
+				// setSelected(priorities, null);
+				// setSelected(projects, null);
+				// setSelected(contexts, null);
+				// search.setText("");
 			}
 		});
 	}
-
-	private View buildIndicator(int textRes) {
-		final TextView indicator = (TextView) this.getLayoutInflater().inflate(
-				R.layout.tab_indicator, mTabHost.getTabWidget(), false);
-		indicator.setText(textRes);
-		return indicator;
-	}
-
-	private static ArrayList<String> getItems(ListView adapter, String type) {
-		ArrayList<String> arr = new ArrayList<String>();
-		int size = adapter.getCount();
-		for (int i = 0; i < size; i++) {
-			if (adapter.isItemChecked(i)) {
-				arr.add((String) adapter.getAdapter().getItem(i));
-				Log.v(TAG, " Adding "
-						+ (String) adapter.getAdapter().getItem(i)
-						+ " to applied filters.");
-				if (!appliedFilters.contains(type)) {
-					appliedFilters.add(type);
-					Log.v(TAG, " Adding " + type + " to applied filter types.");
-				}
-			}
-		}
-		return arr;
-	}
-
-	private static void setSelected(ListView lv, ArrayList<String> selected) {
-		int count = lv.getCount();
-		for (int i = 0; i < count; i++) {
-			String str = (String) lv.getItemAtPosition(i);
-			lv.setItemChecked(i, selected != null && selected.contains(str));
-		}
-	}
+	/*
+	 * @Override protected void onCreate(Bundle savedInstanceState) {
+	 * super.onCreate(savedInstanceState); mTabHost = getTabHost();
+	 * 
+	 * Drawable actionBarBg = getResources().getDrawable(
+	 * R.drawable.title_background);
+	 * mTabHost.getTabWidget().setBackgroundDrawable(actionBarBg);
+	 * 
+	 * LayoutInflater.from(this).inflate(R.layout.filter,
+	 * mTabHost.getTabContentView(), true);
+	 * 
+	 * mTabHost.addTab(mTabHost
+	 * .newTabSpec(getString(R.string.filter_tab_priorities)) //
+	 * .setIndicator(getString(R.string.filter_tab_priorities))
+	 * .setIndicator(buildIndicator(R.string.filter_tab_priorities))
+	 * .setContent(R.id.priorities)); mTabHost.addTab(mTabHost
+	 * .newTabSpec(getString(R.string.filter_tab_projects))
+	 * .setIndicator(buildIndicator(R.string.filter_tab_projects))
+	 * .setContent(R.id.projects)); mTabHost.addTab(mTabHost
+	 * .newTabSpec(getString(R.string.filter_tab_contexts))
+	 * .setIndicator(buildIndicator(R.string.filter_tab_contexts))
+	 * .setContent(R.id.contexts)); mTabHost.addTab(mTabHost
+	 * .newTabSpec(getString(R.string.filter_tab_search))
+	 * .setIndicator(buildIndicator(R.string.filter_tab_search))
+	 * .setContent(R.id.search));
+	 * 
+	 * 
+	 * 
+	 * final ListView priorities = (ListView) findViewById(R.id.prioritieslv);
+	 * priorities.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+	 * priorities.setAdapter(new ArrayAdapter<String>(this,
+	 * R.layout.simple_list_item_multiple_choice, priosArr));
+	 * setSelected(priorities, priosArrSelected);
+	 * 
+	 * final ListView projects = (ListView) findViewById(R.id.projectslv);
+	 * projects.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+	 * projects.setAdapter(new ArrayAdapter<String>(this,
+	 * R.layout.simple_list_item_multiple_choice, projectsArr));
+	 * setSelected(projects, projectsArrSelected);
+	 * 
+	 * final ListView contexts = (ListView) findViewById(R.id.contextslv);
+	 * contexts.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+	 * contexts.setAdapter(new ArrayAdapter<String>(this,
+	 * R.layout.simple_list_item_multiple_choice, contextsArr));
+	 * setSelected(contexts, contextsArrSelected);
+	 * 
+	 * final EditText search = (EditText) findViewById(R.id.searchet);
+	 * search.setText(searchTerm);
+	 * 
+	 * final DatePicker duedatePicker = (DatePicker)
+	 * findViewById(R.id.dueDatePicker); if (dueDate != null) { dueDate =
+	 * dueDate.substring(4); Date date = Date.valueOf(dueDate);
+	 * duedatePicker.updateDate(date.getYear(), date.getMonth(), date.getDay());
+	 * } else { Calendar c = Calendar.getInstance();
+	 * duedatePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+	 * c.get(Calendar.DAY_OF_MONTH)); }
+	 * 
+	 * Button ok = (Button) findViewById(R.id.ok); ok.setOnClickListener(new
+	 * OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { Log.v(TAG, "onClick OK"); Intent
+	 * data = new Intent(); Log.v(TAG, "Clearing all filter types.");
+	 * appliedFilters = new ArrayList<String>();
+	 * data.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
+	 * getItems(priorities, "Priority"));
+	 * data.putStringArrayListExtra(Constants.EXTRA_PROJECTS, getItems(projects,
+	 * "Project")); data.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
+	 * getItems(contexts, "Context")); data.putExtra(Constants.EXTRA_SEARCH,
+	 * search.getText() .toString()); String date =
+	 * Integer.toString(duedatePicker.getYear()) + "-" +
+	 * Integer.toString(duedatePicker.getMonth()+1) + "-" +
+	 * Integer.toString(duedatePicker.getDayOfMonth());
+	 * data.putExtra(Constants.EXTRA_DUEDATE, date);
+	 * data.putStringArrayListExtra(Constants.EXTRA_APPLIED_FILTERS,
+	 * appliedFilters); setResult(Activity.RESULT_OK, data); finish(); } });
+	 * 
+	 * Button cancel = (Button) findViewById(R.id.cancel);
+	 * cancel.setOnClickListener(new OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { Log.v(TAG, "onClick Cancel");
+	 * setResult(Activity.RESULT_CANCELED); finish(); } });
+	 * 
+	 * Button clear = (Button) findViewById(R.id.clear);
+	 * clear.setOnClickListener(new OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { Log.v(TAG, "onClick Clear");
+	 * appliedFilters = new ArrayList<String>(); setSelected(priorities, null);
+	 * setSelected(projects, null); setSelected(contexts, null);
+	 * search.setText(""); } }); }
+	 * 
+	 * private View buildIndicator(int textRes) { final TextView indicator =
+	 * (TextView) this.getLayoutInflater().inflate( R.layout.tab_indicator,
+	 * mTabHost.getTabWidget(), false); indicator.setText(textRes); return
+	 * indicator; }
+	 * 
+	 * private static ArrayList<String> getItems(ListView adapter, String type)
+	 * { ArrayList<String> arr = new ArrayList<String>(); int size =
+	 * adapter.getCount(); for (int i = 0; i < size; i++) { if
+	 * (adapter.isItemChecked(i)) { arr.add((String)
+	 * adapter.getAdapter().getItem(i)); Log.v(TAG, " Adding " + (String)
+	 * adapter.getAdapter().getItem(i) + " to applied filters."); if
+	 * (!appliedFilters.contains(type)) { appliedFilters.add(type); Log.v(TAG,
+	 * " Adding " + type + " to applied filter types."); } } } return arr; }
+	 * 
+	 * private static void setSelected(ListView lv, ArrayList<String> selected)
+	 * { int count = lv.getCount(); for (int i = 0; i < count; i++) { String str
+	 * = (String) lv.getItemAtPosition(i); lv.setItemChecked(i, selected != null
+	 * && selected.contains(str)); } }
+	 */
 
 }
