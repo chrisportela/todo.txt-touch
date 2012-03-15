@@ -26,145 +26,108 @@ You should have received a copy of the GNU General Public License along with Tod
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-        <TextView
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/buttons"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="20px" >Search Peramters:
-        </TextView>
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/actionbar_dark_background"
+            android:orientation="horizontal"
+            android:padding="3dip" >
 
-        <ScrollView android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/clear" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="80px"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
                 <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Filter"
+                    android:textColor="@color/white"
+                    android:textSize="20pt" />
+            </LinearLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">Testing Testing 1
-                </TextView>
+                android:layout_height="wrap_content"
+                android:text="Your current Selection:" />
+
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40px"
+                android:layout_marginTop="20px" >
 
                 <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">Testing Testing 2
-                </TextView>
+                    android:id="@+id/filterSelectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:height="200px"
+                    android:text="Nothing currently selected." />
+            </ScrollView>
 
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">Testing Testing 3
-                </TextView>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">Testing Testing 4
-                </TextView>
+                <Button
+                    android:id="@+id/addPriorityBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Priorty" />
 
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">Testing Testing 4
-                </TextView>
-            </RelativeLayout>
-        </ScrollView>
-    <!-- <RelativeLayout -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content"> -->
+                <Button
+                    android:id="@+id/addProjectBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Project" />
 
+                <Button
+                    android:id="@+id/addContextBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Context" />
+            </LinearLayout>
 
-    <!-- <LinearLayout android:id="@+id/buttons" -->
-    <!-- android:orientation="horizontal" -->
-    <!-- android:layout_alignParentBottom="true" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:background="@drawable/actionbar_dark_background" -->
-    <!-- android:padding="3dip"> -->
-
-
-    <!-- <Button android:id="@+id/ok" -->
-    <!-- android:text="@string/ok" -->
-    <!-- android:layout_weight="1" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content" /> -->
-
-
-    <!-- <Button android:id="@+id/cancel" -->
-    <!-- android:text="@string/cancel" -->
-    <!-- android:layout_weight="1" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content" /> -->
-
-
-    <!-- <Button android:id="@+id/clear" -->
-    <!-- android:text="@string/clear" -->
-    <!-- android:layout_weight="1" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content" /> -->
-
-
-    <!-- </LinearLayout> -->
-
-
-    <!-- <LinearLayout android:id="@+id/priorities" -->
-    <!-- android:layout_above="@id/buttons" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:background="@color/white"> -->
-
-
-    <!-- <ListView android:id="@+id/prioritieslv" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:cacheColorHint="#00000000" /> -->
-
-
-    <!-- </LinearLayout> -->
-
-
-    <!-- <LinearLayout android:id="@+id/projects" -->
-    <!-- android:layout_above="@id/buttons" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:background="@color/white"> -->
-
-
-    <!-- <ListView android:id="@+id/projectslv" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" /> -->
-
-
-    <!-- </LinearLayout> -->
-
-
-    <!-- <LinearLayout android:id="@+id/contexts" -->
-    <!-- android:layout_above="@id/buttons" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:background="@color/white"> -->
-
-
-    <!-- <ListView android:id="@+id/contextslv" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:cacheColorHint="#00000000" /> -->
-
-
-    <!-- </LinearLayout> -->
-
-
-    <!-- <LinearLayout android:id="@+id/search" -->
-    <!-- android:layout_above="@id/buttons" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="fill_parent" -->
-    <!-- android:background="@color/white"> -->
-
-
-    <!-- <EditText android:id="@+id/searchet" -->
-    <!-- android:layout_width="fill_parent" -->
-    <!-- android:layout_height="wrap_content" /> -->
-
-
-    <!-- </LinearLayout> -->
-
-
-    <!-- </RelativeLayout> -->
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+            </ScrollView>
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
