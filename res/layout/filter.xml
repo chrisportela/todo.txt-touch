@@ -23,10 +23,10 @@ You should have received a copy of the GNU General Public License along with Tod
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
         <LinearLayout
             android:id="@+id/buttons"
             android:layout_width="fill_parent"
