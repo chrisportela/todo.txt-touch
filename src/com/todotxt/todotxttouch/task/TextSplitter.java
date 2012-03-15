@@ -34,6 +34,9 @@ class TextSplitter {
 
 	private final static Pattern SINGLE_DATE_PATTERN = Pattern
 			.compile("^(\\d{4}-\\d{2}-\\d{2}) (.*)");
+	
+	private final static Pattern DUE_DATE_PATTERN = Pattern
+			.compile("(.*) (due:|DUE:)(\\d{4}-\\d{2}-\\d{2}) (.*)");
 
 	private final static TextSplitter INSTANCE = new TextSplitter();
 
@@ -50,20 +53,22 @@ class TextSplitter {
 		public final String prependedDate;
 		public final boolean completed;
 		public final String completedDate;
+		public final String dueDate;
 
 		private SplitResult(Priority priority, String text,
-				String prependedDate, boolean completed, String completedDate) {
+				String prependedDate, boolean completed, String completedDate, String dueDate) {
 			this.priority = priority;
 			this.text = text;
 			this.prependedDate = prependedDate;
 			this.completed = completed;
 			this.completedDate = completedDate;
+			this.dueDate = dueDate;
 		}
 	}
 
 	public SplitResult split(String inputText) {
 		if (inputText == null) {
-			return new SplitResult(Priority.NONE, "", "", false, "");
+			return new SplitResult(Priority.NONE, "", "", false, "", "");
 		}
 
 		Matcher completedMatcher = COMPLETED_PATTERN.matcher(inputText);
@@ -87,6 +92,7 @@ class TextSplitter {
 
 		String completedDate = "";
 		String prependedDate = "";
+		String dueDate = "";
 		if (completed) {
 			Matcher completedAndPrependedDatesMatcher = COMPLETED_PREPENDED_DATES_PATTERN
 					.matcher(text);
@@ -108,9 +114,16 @@ class TextSplitter {
 				text = prependedDateMatcher.group(2);
 				prependedDate = prependedDateMatcher.group(1);
 			}
+			//TODO: Figure out way to check if pattern correct and return anywhere in text
+			Matcher dueDateMatcher = DUE_DATE_PATTERN.matcher(text);
+			if (dueDateMatcher.find()){
+				text = dueDateMatcher.group(2);
+				dueDate = dueDateMatcher.group(1);
+			}
+				
 		}
 
 		return new SplitResult(priority, text, prependedDate, completed,
-				completedDate);
+				completedDate, dueDate);
 	}
 }
