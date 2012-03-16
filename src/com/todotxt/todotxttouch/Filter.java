@@ -106,23 +106,26 @@ public class Filter extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
 				builder.setTitle("Add Priorities")
-						.setCancelable(false)
+						.setCancelable(true)
 						.setSingleChoiceItems(priorityCharArr, -1,
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										Log.e(TAG, "Added Priority");
-										Toast.makeText(
-												getApplicationContext(),
-												"Priority : "
-														+ priorityCharArr[which],
-												Toast.LENGTH_SHORT).show();
-										priosArrSelected
-										.add(priorityCharArr[which]
-												.toString());
-								updateStatus();
+										if (which > -1) {
+											Log.e(TAG, "Added Priority");
+											Toast.makeText(
+													getApplicationContext(),
+													"Priority : "
+															+ priorityCharArr[which],
+													Toast.LENGTH_SHORT).show();
+											priosArrSelected
+													.add(priorityCharArr[which]
+															.toString());
+											appliedFilters.add("pri-"+priorityCharArr[which]);
+											updateStatus();
+										}
 										dialog.dismiss();
 
 									}
@@ -147,23 +150,26 @@ public class Filter extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
 				builder.setTitle("Add Projects")
-						.setCancelable(false)
+						.setCancelable(true)
 						.setSingleChoiceItems(projextCharArr, -1,
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										Log.e(TAG, "Added Priority");
-										Toast.makeText(
-												getApplicationContext(),
-												"Project : "
-														+ projextCharArr[which],
-												Toast.LENGTH_SHORT).show();
-										projectsArrSelected
-										.add(projextCharArr[which]
-												.toString());
-								updateStatus();
+										if (which > -1) {
+											Log.e(TAG, "Added Priority");
+											Toast.makeText(
+													getApplicationContext(),
+													"Project : "
+															+ projextCharArr[which],
+													Toast.LENGTH_SHORT).show();
+											projectsArrSelected
+													.add(projextCharArr[which]
+															.toString());
+											appliedFilters.add("prj-"+projextCharArr[which]);
+											updateStatus();
+										}
 										dialog.dismiss();
 
 									}
@@ -190,23 +196,26 @@ public class Filter extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
 				builder.setTitle("Add Context")
-						.setCancelable(false)
+						.setCancelable(true)
 						.setSingleChoiceItems(contextCharArr, -1,
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										Log.e(TAG, "Added Priority");
-										Toast.makeText(
-												getApplicationContext(),
-												"Context : "
-														+ contextCharArr[which],
-												Toast.LENGTH_SHORT).show();
-										contextsArrSelected
-												.add(contextCharArr[which]
-														.toString());
-										updateStatus();
+										if (which > -1) {
+											Log.e(TAG, "Added Priority");
+											Toast.makeText(
+													getApplicationContext(),
+													"Context : "
+															+ contextCharArr[which],
+													Toast.LENGTH_SHORT).show();
+											contextsArrSelected
+													.add(contextCharArr[which]
+															.toString());
+											appliedFilters.add("ctx-"+contextCharArr[which]);
+											updateStatus();
+										}
 										dialog.dismiss();
 									}
 								});
@@ -294,12 +303,11 @@ public class Filter extends Activity {
 		for (String s : contextsArrSelected) {
 			status += "Context-" + s + ", ";
 		}
-		if(!status.equals("")){
-		status = status.substring(0,status.length()-2);
-		filterSelectionText.setText((CharSequence) status);
-		}
-		else if(status.equals("")){
+		if (!status.equals("")) {
+			status = status.substring(0, status.length() - 2);
 			filterSelectionText.setText((CharSequence) status);
+		} else if (status.equals("")) {
+			filterSelectionText.setText("Nothing currently selected");
 		}
 	}
 

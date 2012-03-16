@@ -70,32 +70,34 @@ You should have received a copy of the GNU General Public License along with Tod
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/actionbar_background"
                 android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="Filter"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black_trans"
                     android:textSize="20pt" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your current Selection:" />
+                android:text="Your current Selection:"
+                android:textSize="8pt" />
 
             <ScrollView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_margin="10dp" >
 
                 <TextView
                     android:id="@+id/filterSelectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
-                    android:text="Nothing currently selected." />
+                    android:text="Nothing currently selected."
+                    android:textSize="7pt" />
             </ScrollView>
 
             <LinearLayout
@@ -107,24 +109,28 @@ You should have received a copy of the GNU General Public License along with Tod
                     android:id="@+id/addPriorityBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Priorty" />
 
                 <Button
                     android:id="@+id/addProjectBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Project" />
 
                 <Button
                     android:id="@+id/addContextBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Context" />
             </LinearLayout>
 
             <ScrollView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
