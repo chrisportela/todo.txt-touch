@@ -22,67 +22,81 @@
  */
 package com.todotxt.todotxttouch;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.EmptyStackException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Filter extends Activity {
 
 	private final static String TAG = Filter.class.getSimpleName();
 	private static ArrayList<String> appliedFilters = new ArrayList<String>();
+	Intent data;
+	ArrayList<String> priosArr;
+	ArrayList<String> projectsArr;
+	ArrayList<String> contextsArr;
+	ArrayList<String> priosArrSelected;
+	ArrayList<String> projectsArrSelected;
+	ArrayList<String> contextsArrSelected;
+	String dueDate;
+	String searchTerm;
+	TextView filterSelectionText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.filter);
 
-		Intent data = getIntent();
-		ArrayList<String> priosArr = data
-				.getStringArrayListExtra(Constants.EXTRA_PRIORITIES);
-		ArrayList<String> projectsArr = data
-				.getStringArrayListExtra(Constants.EXTRA_PROJECTS);
-		ArrayList<String> contextsArr = data
-				.getStringArrayListExtra(Constants.EXTRA_CONTEXTS);
+		data = getIntent();
 
-		ArrayList<String> priosArrSelected = data
+		priosArr = data.getStringArrayListExtra(Constants.EXTRA_PRIORITIES);
+		projectsArr = data.getStringArrayListExtra(Constants.EXTRA_PROJECTS);
+		contextsArr = data.getStringArrayListExtra(Constants.EXTRA_CONTEXTS);
+		priosArrSelected = data
 				.getStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED);
-		ArrayList<String> projectsArrSelected = data
+		projectsArrSelected = data
 				.getStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED);
-		ArrayList<String> contextsArrSelected = data
+		contextsArrSelected = data
 				.getStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED);
-		String dueDate = data.getStringExtra(Constants.EXTRA_DUEDATE);
-		String searchTerm = data.getStringExtra(Constants.EXTRA_SEARCH);
+		dueDate = data.getStringExtra(Constants.EXTRA_DUEDATE);
+		searchTerm = data.getStringExtra(Constants.EXTRA_SEARCH);
+		filterSelectionText = (TextView) findViewById(R.id.filterSelectionText);
+		updateStatus();
+
+		/*
+		 * Intent data = getIntent(); ArrayList<String> priosArr = data
+		 * .getStringArrayListExtra(Constants.EXTRA_PRIORITIES);
+		 * ArrayList<String> projectsArr = data
+		 * .getStringArrayListExtra(Constants.EXTRA_PROJECTS); ArrayList<String>
+		 * contextsArr = data
+		 * .getStringArrayListExtra(Constants.EXTRA_CONTEXTS);
+		 * 
+		 * ArrayList<String> priosArrSelected = data
+		 * .getStringArrayListExtra(Constants.EXTRA_PRIORITIES_SELECTED);
+		 * ArrayList<String> projectsArrSelected = data
+		 * .getStringArrayListExtra(Constants.EXTRA_PROJECTS_SELECTED);
+		 * ArrayList<String> contextsArrSelected = data
+		 * .getStringArrayListExtra(Constants.EXTRA_CONTEXTS_SELECTED); String
+		 * dueDate = data.getStringExtra(Constants.EXTRA_DUEDATE); String
+		 * searchTerm = data.getStringExtra(Constants.EXTRA_SEARCH);
+		 */
 
 		// Vars of data for alert boxes
-		final CharSequence[] priorityCharArr = priosArr.toArray(new CharSequence[priosArr
-				.size()]);
-		final CharSequence[] projextCharArr = projectsArr.toArray(new CharSequence[projectsArr
-		                                            				.size()]);
-		final CharSequence[] contextCharArr = contextsArr.toArray(new CharSequence[contextsArr
-		                                            				.size()]);
+		final CharSequence[] priorityCharArr = priosArr
+				.toArray(new CharSequence[priosArr.size()]);
+		final CharSequence[] projextCharArr = projectsArr
+				.toArray(new CharSequence[projectsArr.size()]);
+		final CharSequence[] contextCharArr = contextsArr
+				.toArray(new CharSequence[contextsArr.size()]);
 
 		Button priority = (Button) findViewById(R.id.addPriorityBtn);
 		priority.setOnClickListener(new OnClickListener() {
@@ -91,7 +105,6 @@ public class Filter extends Activity {
 				Log.e(TAG, "Clicked Priority button");
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
-				boolean dialogCanceled = false;
 				builder.setTitle("Add Priorities")
 						.setCancelable(false)
 						.setSingleChoiceItems(priorityCharArr, -1,
@@ -100,32 +113,22 @@ public class Filter extends Activity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// TODO Auto-generated method stub
 										Log.e(TAG, "Added Priority");
-
-									}
-								})
-						.setPositiveButton("Add",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
+										Toast.makeText(
+												getApplicationContext(),
+												"Priority : "
+														+ priorityCharArr[which],
+												Toast.LENGTH_SHORT).show();
+										priosArrSelected
+										.add(priorityCharArr[which]
+												.toString());
+								updateStatus();
 										dialog.dismiss();
-									}
-								})
-						.setNegativeButton("Cancel",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
 
 									}
 								});
-
 				AlertDialog alert = builder.create();
 				alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
 					@Override
 					public void onDismiss(DialogInterface dialog) {
 						Log.e(TAG, "Saved Project data(Fake)");
@@ -143,7 +146,6 @@ public class Filter extends Activity {
 				Log.e(TAG, "Clicked Project button");
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
-				boolean dialogCanceled = false;
 				builder.setTitle("Add Projects")
 						.setCancelable(false)
 						.setSingleChoiceItems(projextCharArr, -1,
@@ -152,25 +154,17 @@ public class Filter extends Activity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// TODO Auto-generated method stub
-										Log.e(TAG, "Added Project");
-
-									}
-								})
-						.setPositiveButton("Add",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
+										Log.e(TAG, "Added Priority");
+										Toast.makeText(
+												getApplicationContext(),
+												"Project : "
+														+ projextCharArr[which],
+												Toast.LENGTH_SHORT).show();
+										projectsArrSelected
+										.add(projextCharArr[which]
+												.toString());
+								updateStatus();
 										dialog.dismiss();
-									}
-								})
-						.setNegativeButton("Cancel",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
 
 									}
 								});
@@ -195,7 +189,6 @@ public class Filter extends Activity {
 				Log.e(TAG, "Clicked Context button");
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						Filter.this);
-				boolean dialogCanceled = false;
 				builder.setTitle("Add Context")
 						.setCancelable(false)
 						.setSingleChoiceItems(contextCharArr, -1,
@@ -204,26 +197,17 @@ public class Filter extends Activity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// TODO Auto-generated method stub
-										Log.e(TAG, "Added Context");
-
-									}
-								})
-						.setPositiveButton("Add",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
+										Log.e(TAG, "Added Priority");
+										Toast.makeText(
+												getApplicationContext(),
+												"Context : "
+														+ contextCharArr[which],
+												Toast.LENGTH_SHORT).show();
+										contextsArrSelected
+												.add(contextCharArr[which]
+														.toString());
+										updateStatus();
 										dialog.dismiss();
-									}
-								})
-						.setNegativeButton("Cancel",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
-
 									}
 								});
 
@@ -246,7 +230,10 @@ public class Filter extends Activity {
 			public void onClick(View v) {
 				Log.v(TAG, "onClick OK");
 				Intent data = new Intent();
-				Log.v(TAG, "Clearing all filter types.");
+				data = createIntent();
+				appliedFilters = new ArrayList<String>();
+				setResult(Activity.RESULT_OK, data);
+				// data.Log.v(TAG, "Clearing all filter types.");
 				appliedFilters = new ArrayList<String>();
 				finish();
 			}
@@ -268,14 +255,57 @@ public class Filter extends Activity {
 			public void onClick(View v) {
 				Log.v(TAG, "onClick Clear");
 				appliedFilters = new ArrayList<String>();
-				// setSelected(priorities, null);
-				// setSelected(projects, null);
-				// setSelected(contexts, null);
-				// search.setText("");
+				priosArrSelected = new ArrayList<String>();
+				projectsArrSelected = new ArrayList<String>();
+				contextsArrSelected = new ArrayList<String>();
+				filterSelectionText.setText("Nothing currently selected");
 			}
 		});
 	}
+
+	public Intent createIntent() {
+		Intent data = new Intent();
+		data.putStringArrayListExtra(Constants.EXTRA_PRIORITIES,
+				priosArrSelected);
+		data.putStringArrayListExtra(Constants.EXTRA_PROJECTS,
+				projectsArrSelected);
+		data.putStringArrayListExtra(Constants.EXTRA_CONTEXTS,
+				contextsArrSelected);
+		/*
+		 * data.putExtra(Constants.EXTRA_SEARCH, search.getText() .toString());
+		 * String date = Integer.toString(duedatePicker.getYear()) + "-" +
+		 * Integer.toString(duedatePicker.getMonth() + 1) + "-" +
+		 * Integer.toString(duedatePicker.getDayOfMonth());
+		 * data.putExtra(Constants.EXTRA_DUEDATE, date);
+		 */
+		data.putStringArrayListExtra(Constants.EXTRA_APPLIED_FILTERS,
+				appliedFilters);
+		return data;
+	}
+
+	public void updateStatus() {
+		String status = "";
+		for (String s : priosArrSelected) {
+			status += "Pri-" + s + ", ";
+		}
+		for (String s : projectsArrSelected) {
+			status += "Project-" + s + ", ";
+		}
+		for (String s : contextsArrSelected) {
+			status += "Context-" + s + ", ";
+		}
+		if(!status.equals("")){
+		status = status.substring(0,status.length()-2);
+		filterSelectionText.setText((CharSequence) status);
+		}
+		else if(status.equals("")){
+			filterSelectionText.setText((CharSequence) status);
+		}
+	}
+
 	/*
+	 * public void method(){
+	 * 
 	 * @Override protected void onCreate(Bundle savedInstanceState) {
 	 * super.onCreate(savedInstanceState); mTabHost = getTabHost();
 	 * 
@@ -382,7 +412,6 @@ public class Filter extends Activity {
 	 * private static void setSelected(ListView lv, ArrayList<String> selected)
 	 * { int count = lv.getCount(); for (int i = 0; i < count; i++) { String str
 	 * = (String) lv.getItemAtPosition(i); lv.setItemChecked(i, selected != null
-	 * && selected.contains(str)); } }
+	 * && selected.contains(str)); } } }
 	 */
-
 }
