@@ -167,7 +167,7 @@ public class Filter extends Activity {
 											projectsArrSelected
 													.add(projextCharArr[which]
 															.toString());
-											appliedFilters.add("prj-"+projextCharArr[which]);
+											appliedFilters.add("+"+projextCharArr[which]);
 											updateStatus();
 										}
 										dialog.dismiss();
@@ -213,7 +213,7 @@ public class Filter extends Activity {
 											contextsArrSelected
 													.add(contextCharArr[which]
 															.toString());
-											appliedFilters.add("ctx-"+contextCharArr[which]);
+											appliedFilters.add("@"+contextCharArr[which]);
 											updateStatus();
 										}
 										dialog.dismiss();
@@ -298,10 +298,10 @@ public class Filter extends Activity {
 			status += "Pri-" + s + ", ";
 		}
 		for (String s : projectsArrSelected) {
-			status += "Project-" + s + ", ";
+			status += "+" + s + ", ";
 		}
 		for (String s : contextsArrSelected) {
-			status += "Context-" + s + ", ";
+			status += "@" + s + ", ";
 		}
 		if (!status.equals("")) {
 			status = status.substring(0, status.length() - 2);
